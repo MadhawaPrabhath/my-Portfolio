@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────
+   Theme tokens — Palette A "Electric Violet"
+   Dark is the default; [data-theme="light"] overrides.
+   ────────────────────────────────────────────── */
+:root {
+  --bg: #08080c;
+  --surface: #12121a;
+  --surface-2: #1a1a25;
+  --border: rgb(255 255 255 / 0.08);
+  --text: #ededf3;
+  --muted: #9a9ab0;
+  --accent: #7c5cff;
+  --accent-strong: #6a47ff; /* solid backgrounds (white text ≥ 4.5:1) */
+  --accent-soft: #a895ff; /* accent-coloured text on dark */
+  --accent-2: #3dd6f5; /* secondary glow used sparingly in 3D */
+  --glow: rgb(124 92 255 / 0.35);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #f6f6fb;
+  --surface: #ffffff;
+  --surface-2: #eeeef6;
+  --border: rgb(14 14 20 / 0.1);
+  --text: #0e0e14;
+  --muted: #55556a;
+  --accent: #5b3fe6;
+  --accent-strong: #5b3fe6;
+  --accent-soft: #4a2fd4;
+  --accent-2: #0891b2;
+  --glow: rgb(91 63 230 / 0.2);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-jetbrains);
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Keyboard focus ring */
+:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Lenis recommended styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hide the native cursor only when the custom cursor is active (desktop, fine pointer) */
+html.has-custom-cursor,
+html.has-custom-cursor a,
+html.has-custom-cursor button {
+  cursor: none;
+}
+html.has-custom-cursor input,
+html.has-custom-cursor textarea {
+  cursor: text;
+}
+
+/* Subtle film-grain + grid backdrop */
+.bg-grid {
+  background-image: linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, var(--text) 30%, var(--accent-soft) 70%, var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass {
+  background: color-mix(in oklab, var(--surface) 70%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--accent-strong);
+  color: #fff;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes scrollhint {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
