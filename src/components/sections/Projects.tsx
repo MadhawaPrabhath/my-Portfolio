@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { animate, motion, useInView, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { isPlaceholder, projects, socials, type Project, type ProjectCategory } from "@/data/portfolio";
@@ -173,10 +173,13 @@ export default function Projects() {
   const stage = useRef<HTMLDivElement>(null);
   const inView = useInView(stage, { margin: "-20% 0px" });
   const [cardW, setCardW] = useState(340);
-  useEffect(() => {
+  // Layout effect: measure before the first paint so the ring never renders at a guessed size and then jumps.
+  useLayoutEffect(() => {
     const el = stage.current;
     if (!el) return;
-    const ro = new ResizeObserver(([entry]) => setCardW(Math.round(Math.min(360, Math.max(250, entry.contentRect.width * 0.72)))));
+    const fit = (w: number) => Math.round(Math.min(360, Math.max(250, w * 0.72)));
+    setCardW(fit(el.clientWidth - 48)); // minus px-6 padding, same as contentRect
+    const ro = new ResizeObserver(([entry]) => setCardW(fit(entry.contentRect.width)));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
@@ -292,8 +295,14 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* 3D ring carousel */}
-      <div
+      {/* 3D ring carousel.
+          The fade-in lives here, on the perspective root — NOT on the preserve-3d element:
+          opacity < 1 on a preserve-3d element flattens the ring and makes the cards glitch. */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.9, ease }}
         ref={stage}
         role="region"
         aria-roledescription="carousel"
@@ -313,11 +322,7 @@ export default function Projects() {
         {/* Floor glow */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-[15%] bottom-0 h-24 rounded-[50%] bg-accent/20 blur-3xl" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.9, ease }}
+        <div
           className="relative mx-auto h-[26rem] cursor-grab active:cursor-grabbing md:h-[28rem]"
           style={{ width: cardW, transformStyle: "preserve-3d" }}
           onPointerDown={onPointerDown}
@@ -342,13 +347,13 @@ export default function Projects() {
               ))}
             </motion.ul>
           </div>
-        </motion.div>
+        </div>
 
         {/* Live status for screen readers */}
         <p aria-live="polite" className="sr-only">
           {total ? `Project ${active + 1} of ${total}: ${visible[active]?.title}` : "No projects"}
         </p>
-      </div>
+      </motion.div>
 
       {/* Controls */}
       <div className="mx-auto mt-10 flex max-w-6xl items-center justify-center gap-5 px-6">
