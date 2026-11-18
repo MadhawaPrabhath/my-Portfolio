@@ -6,7 +6,6 @@ import { navItems, profile } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { scrollToSection } from "@/lib/scroll";
 import { useIntroDone } from "@/lib/store";
-import ThemeToggle from "./ThemeToggle";
 import Logo from "@/components/ui/Logo";
 import { CloseIcon, MenuIcon } from "@/components/ui/Icons";
 
@@ -74,7 +73,7 @@ export default function Navbar() {
         </a>
 
         {/* Desktop links */}
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="ml-auto hidden items-center gap-1 md:flex">
           {navItems.map((item) => {
             const isActive = active === item.id;
             return (
@@ -101,8 +100,7 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
+        <div className="flex items-center gap-2 md:hidden">
           <button
             type="button"
             className="grid size-10 place-items-center rounded-full border border-line md:hidden"

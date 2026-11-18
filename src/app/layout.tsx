@@ -50,15 +50,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#08080c" },
-    { media: "(prefers-color-scheme: light)", color: "#f6f6fb" },
-  ],
-  colorScheme: "dark light",
+  themeColor: "#08080c",
+  colorScheme: "dark",
 };
-
-/** Runs before paint so a saved light theme never flashes dark. Dark is the default. */
-const themeScript = `try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.dataset.theme='light'}}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -68,9 +62,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${display.variable} ${inter.variable} ${mono.variable}`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="min-h-dvh overflow-x-clip">
         <a href="#main" className="skip-link">
           Skip to content

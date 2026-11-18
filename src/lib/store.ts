@@ -29,18 +29,8 @@ export type Theme = "dark" | "light";
 const themeStore = createStore<Theme>("dark");
 
 if (typeof document !== "undefined") {
-  // The inline script in layout.tsx sets data-theme before first paint.
+  // The site is dark-only now (layout.tsx sets data-theme="dark"); the light branch is kept dormant.
   themeStore.set(document.documentElement.dataset.theme === "light" ? "light" : "dark");
-}
-
-export function setTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
-  try {
-    localStorage.setItem("theme", theme);
-  } catch {
-    /* storage unavailable — theme still applies for this visit */
-  }
-  themeStore.set(theme);
 }
 
 export const useTheme = () => useSyncExternalStore(themeStore.subscribe, themeStore.get, () => "dark" as Theme);

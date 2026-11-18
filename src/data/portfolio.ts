@@ -56,7 +56,7 @@ export const isPlaceholder = (value?: string) => !value || value.trim().startsWi
 
 export const site = {
   /** Your deployed URL — used for SEO, sitemap and Open Graph. Or set NEXT_PUBLIC_SITE_URL. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://your-portfolio.vercel.app", // [ADD LINK]
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://madhawa-gunarathne.vercel.app",
   title: "Madhawa Gunarathne — Software Engineer",
   description:
     "Portfolio of Madhawa Gunarathne, a Software Engineer and B.Sc. (Hons) Computer Science & Statistics graduate from the University of Peradeniya, focused on full-stack development, AI-driven automation and data analysis.",
