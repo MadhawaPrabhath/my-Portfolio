@@ -16,6 +16,7 @@
   --accent-soft: #a895ff; /* accent-coloured text on dark */
   --accent-2: #3dd6f5; /* secondary glow used sparingly in 3D */
   --glow: rgb(124 92 255 / 0.35);
+  --syn-str: #7ee2a8; /* code-editor string colour */
   color-scheme: dark;
 }
 
@@ -31,6 +32,7 @@
   --accent-soft: #4a2fd4;
   --accent-2: #0891b2;
   --glow: rgb(91 63 230 / 0.2);
+  --syn-str: #15803d;
   color-scheme: light;
 }
 
@@ -153,5 +155,16 @@ html.has-custom-cursor textarea {
   }
   100% {
     transform: translateY(200%);
+  }
+}
+
+/* Gentle hover for the hero code editor */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }

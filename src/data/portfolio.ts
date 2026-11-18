@@ -68,7 +68,7 @@ export const profile = {
   lastName: "Gunarathne",
   initials: "MG",
   title: "Software Engineer",
-  tagline: "Full-stack engineering, AI-driven automation and data that tells a story.",
+  tagline: "Full-stack Development, AI-driven automation and data that tells a story.",
   location: "Dambulla, Central Province, Sri Lanka",
   email: "madhawa.0516@gmail.com",
   phone: "+94 77 4148826",
@@ -78,6 +78,24 @@ export const profile = {
     "Recent B.Sc. (Hons) graduate in Applied Sciences (Computer Science and Statistics) from the University of Peradeniya, with a proven ability to design scalable web architectures and build full-stack applications.",
     "I automate complex workflows using n8n and AI, and transform complex datasets into interactive visual insights. I'm passionate about leveraging data analysis and modern full-stack engineering to deliver robust, real-world software products.",
   ],
+};
+
+/**
+ * The code snippet "typed" in the hero editor window.
+ * Values can be a string or a list of strings.
+ */
+export const heroCode = {
+  fileName: "developer.ts",
+  variable: "developer",
+  fields: {
+    name: profile.name,
+    role: profile.title,
+    location: "Dambulla, Sri Lanka",
+    degree: "B.Sc. (Hons) CS & Statistics",
+    stack: ["Next.js", "FastAPI", "PostgreSQL"],
+    focus: ["Full-Stack", "AI Automation", "Data Analysis"],
+  } as Record<string, string | string[]>,
+  terminal: { command: "npm run build", output: "✓ Compiled successfully" },
 };
 
 export const socials = {
@@ -240,6 +258,5 @@ export const navItems = [
   { id: "skills", label: "Skills" },
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
-  { id: "education", label: "Education" },
   { id: "contact", label: "Contact" },
 ] as const;

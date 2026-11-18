@@ -4,7 +4,7 @@ A personal portfolio built with **Next.js 16 (App Router)**, **TypeScript**, **T
 
 ## Features
 
-- An interactive 3D hero: a noise-morphing shader blob, orbit rings and a particle field that react to the mouse.
+- A coding-themed 3D hero: floating syntax glyphs over a scrolling neon grid (WebGL), next to a tilting code editor that types out a `developer.ts` object built from your data.
 - An animated name reveal and a short loading intro.
 - A draggable 3D skill tag sphere (DOM-based, so the text stays crisp), linked to the grouped skill cards.
 - An experience timeline that draws itself on scroll.
@@ -43,7 +43,7 @@ Some values are **placeholders** written like `[ADD LINK]`. Any value that start
 
 ### Theme colours
 
-The colour tokens are CSS variables at the top of [`src/app/globals.css`](src/app/globals.css), with one block for dark and one for light. The 3D scene colours are in `PALETTE` in [`src/components/three/HeroScene.tsx`](src/components/three/HeroScene.tsx).
+The colour tokens are CSS variables at the top of [`src/app/globals.css`](src/app/globals.css), with one block for dark and one for light. The 3D scene colours are in `PALETTE` in [`src/components/three/CodeScene.tsx`](src/components/three/CodeScene.tsx). The text typed in the hero code editor comes from `heroCode` in the data file.
 
 ## Contact form
 
@@ -73,8 +73,8 @@ src/
     icon.svg, opengraph-image.tsx, sitemap.ts, robots.ts
   components/
     layout/   Navbar, Footer, Loader, Cursor, ThemeToggle, SmoothScroll, MotionProvider
-    sections/ Hero, About, Skills (+TagSphere), Experience, Projects, Education, Contact
-    three/    HeroScene (lazy-loaded), shaders
+    sections/ Hero (+CodeEditor), About, Skills (+TagSphere), Experience, Projects, Education, Contact
+    three/    CodeScene (lazy-loaded glyph field + grid)
     ui/       Button (magnetic), TiltCard, Modal, Badge, Reveal, SectionHeading, Icons
   data/portfolio.ts       ← all content
   hooks/                  useMediaQuery (reduced motion / touch / mobile), useActiveSection
@@ -85,5 +85,5 @@ src/
 
 - Three.js is loaded with `next/dynamic` (`ssr: false`) only after the intro finishes. It isn't part of the initial bundle.
 - The canvas stops rendering (`frameloop="never"`) when the hero is off-screen.
-- Polygon budget: about 33k triangles for the blob on desktop and about 7k on mobile. There are 1,200 particles on desktop and 350 on mobile.
+- Scene budget: 42 glyph sprites on desktop and 18 on mobile, plus one grid; all glyph textures are generated once and shared.
 - Devices without WebGL, and visitors who prefer reduced motion, get a static CSS gradient instead.

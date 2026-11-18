@@ -111,7 +111,6 @@ export default function Contact() {
         <SectionHeading
           index="06"
           eyebrow="Contact"
-          title="Let's build something"
           id="contact-title"
           description="Have a role, a project or just a question? My inbox is open."
         />

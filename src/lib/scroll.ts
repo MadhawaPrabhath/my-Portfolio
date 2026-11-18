@@ -19,6 +19,12 @@ export function lockScroll(locked: boolean) {
   document.documentElement.style.overflow = locked ? "hidden" : "";
 }
 
+/** Scroll the page to an absolute Y position (used to bring pinned/horizontal content into view). */
+export function scrollToY(y: number) {
+  if (lenis) lenis.scrollTo(y, { duration: 0.8 });
+  else window.scrollTo({ top: y, behavior: "smooth" });
+}
+
 /** Smoothly scroll to a section id, or to the top when id is "top". */
 export function scrollToSection(id: string) {
   const target = id === "top" ? 0 : document.getElementById(id);

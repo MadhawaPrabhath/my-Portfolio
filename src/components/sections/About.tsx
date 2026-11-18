@@ -104,7 +104,7 @@ export default function About() {
         className="absolute left-[-10%] top-1/4 size-96 rounded-full bg-accent/20 blur-[120px]"
       />
       <div className="relative mx-auto max-w-6xl px-6">
-        <SectionHeading index="01" eyebrow="About" title="A little about me" id="about-title" />
+        <SectionHeading index="01" eyebrow="About" id="about-title" />
 
         <div className="grid items-center gap-14 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-20">
           <div data-parallax="photo" className="flex justify-center md:justify-start">

@@ -36,7 +36,7 @@ export default function Experience() {
   return (
     <section ref={section} id="experience" aria-labelledby="experience-title" className="relative scroll-mt-24 py-28 md:py-40">
       <div className="mx-auto max-w-6xl px-6">
-        <SectionHeading index="03" eyebrow="Experience" title="Where I've worked" id="experience-title" />
+        <SectionHeading index="03" eyebrow="Experience" id="experience-title" />
 
         <ol data-timeline className="relative ml-4 max-w-4xl md:ml-8">
           {/* Track + animated progress line */}

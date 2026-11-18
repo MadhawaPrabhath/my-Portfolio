@@ -21,7 +21,6 @@ export default function Skills() {
         <SectionHeading
           index="02"
           eyebrow="Skills"
-          title="Tools of the trade"
           id="skills-title"
           description="Spin the sphere, or hover a group to see where it lives."
         />

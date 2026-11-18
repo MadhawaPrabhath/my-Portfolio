@@ -9,10 +9,11 @@ import { useIsMobile, useReducedMotion } from "@/hooks/useMediaQuery";
 import { scrollToSection } from "@/lib/scroll";
 import { gsap, useGSAP } from "@/lib/gsap";
 import Button from "@/components/ui/Button";
+import CodeEditor from "./CodeEditor";
 import { ArrowRightIcon, DownloadIcon, MailIcon } from "@/components/ui/Icons";
 
 /* Three.js is ~600 KB — load it only in the browser, after the intro. */
-const HeroScene = dynamic(() => import("@/components/three/HeroScene"), { ssr: false });
+const CodeScene = dynamic(() => import("@/components/three/CodeScene"), { ssr: false });
 
 /** WebGL availability check (cached, client-only). */
 let webglCache: boolean | null = null;
@@ -141,12 +142,12 @@ export default function Hero() {
       {/* Static fallback / backdrop — always rendered, the 3D canvas fades in over it. */}
       <div aria-hidden="true" className="absolute inset-0">
         <div className="bg-grid absolute inset-0 opacity-60" />
-        <div className="absolute right-[-10%] top-1/2 size-[70vmin] -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_35%,var(--accent-2),var(--accent)_45%,transparent_70%)] opacity-30 blur-3xl max-md:right-1/2 max-md:top-[35%] max-md:translate-x-1/2" />
+        <div className="absolute right-[5%] top-1/2 size-[55vmin] -translate-y-1/2 rounded-full bg-accent/25 blur-[120px] max-lg:right-1/2 max-lg:translate-x-1/2" />
       </div>
 
       {show3D && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.6 }} className="absolute inset-0">
-          <HeroScene lite={isMobile} eventSource={section} />
+          <CodeScene lite={isMobile} eventSource={section} />
         </motion.div>
       )}
 
@@ -157,23 +158,14 @@ export default function Hero() {
         ref={content}
         initial="hidden"
         animate={state}
-        className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-24 max-md:pt-[38vh]"
+        className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-16 pt-28 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]"
       >
-        <motion.p
-          variants={fade}
-          custom={0.1}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface/50 px-4 py-1.5 font-mono text-xs text-muted backdrop-blur"
-        >
-          <span className="relative flex size-2">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60" />
-            <span className="relative inline-flex size-2 rounded-full bg-accent" />
-          </span>
-          {profile.location}
-        </motion.p>
+        <div>
+
 
         <h1
           aria-label={`${profile.name}, ${profile.title}`}
-          className="font-display text-[clamp(3rem,11vw,8.5rem)] font-bold leading-[0.9] tracking-[-0.04em]"
+          className="font-display text-[clamp(3rem,11vw,6.25rem)] font-bold leading-[0.92] tracking-[-0.04em]"
         >
           <AnimatedWord word={profile.firstName} offset={0} />
           <AnimatedWord word={profile.lastName} offset={profile.firstName.length} gradient />
@@ -209,6 +201,12 @@ export default function Hero() {
           >
             <MailIcon className="size-4" /> Contact
           </Button>
+        </motion.div>
+        </div>
+
+        {/* Code editor (desktop/tablet-landscape only — keeps the mobile hero short) */}
+        <motion.div variants={fade} custom={0.6} className="hidden lg:block">
+          <CodeEditor start={introDone} instant={reduced} />
         </motion.div>
       </motion.div>
 
