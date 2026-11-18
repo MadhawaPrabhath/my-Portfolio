@@ -39,4 +39,5 @@ export const useTheme = () => useSyncExternalStore(themeStore.subscribe, themeSt
 const introStore = createStore(false);
 
 export const finishIntro = () => introStore.set(true);
+export const isIntroDone = () => introStore.get();
 export const useIntroDone = () => useSyncExternalStore(introStore.subscribe, introStore.get, () => false);

@@ -1,71 +1,75 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { finishIntro } from "@/lib/store";
-import Logo from "@/components/ui/Logo";
+import { lockScroll } from "@/lib/scroll";
+import CodeEditor from "@/components/sections/CodeEditor";
+
+/** How long "✓ Compiled successfully" stays on screen before the curtain lifts. */
+const HOLD_MS = 650;
+/** Safety net: never keep the site hidden longer than this. */
+const MAX_MS = 4000;
 
 /**
- * Intro loading screen: a counter + monogram, then a curtain wipe.
- * Kept short (~1.3s) so it never hurts perceived performance.
- * Reduced-motion users skip straight to the content.
+ * Intro loading screen: a code editor types out `developer.ts`,
+ * the terminal reports "Compiled successfully", then a curtain wipe reveals the site.
+ * Reduced-motion users see the finished code briefly, with no typing.
  */
 export default function Loader() {
   const [visible, setVisible] = useState(true);
-  const bar = useRef<HTMLDivElement>(null);
-  const counter = useRef<HTMLParagraphElement>(null);
+  const [reduced, setReduced] = useState<boolean | null>(null);
+  const closed = useRef(false);
+
+  const close = useCallback(() => {
+    if (closed.current) return;
+    closed.current = true;
+    setVisible(false);
+    lockScroll(false);
+    finishIntro();
+  }, []);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = reduced ? 0 : 1300;
-    const start = performance.now();
-    let frame = 0;
-
-    // Progress is written straight to the DOM (no React re-render per frame).
-    const step = (now: number) => {
-      const p = duration === 0 ? 1 : Math.min((now - start) / duration, 1);
-      const pct = Math.round(p * 100);
-      if (bar.current) bar.current.style.transform = `scaleX(${p})`;
-      if (counter.current) counter.current.textContent = String(pct).padStart(3, "0");
-      if (p < 1) {
-        frame = requestAnimationFrame(step);
-      } else {
-        setVisible(false);
-        finishIntro();
-      }
-    };
-    frame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(frame);
+    // No scrolling under the loader; also start every visit at the top.
+    lockScroll(true);
+    window.scrollTo(0, 0);
+    return () => lockScroll(false);
   }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- read the media query once on mount (client only)
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const safety = setTimeout(close, MAX_MS);
+    return () => clearTimeout(safety);
+  }, [close]);
+
+  const onDone = useCallback(() => {
+    setTimeout(close, reduced ? 300 : HOLD_MS);
+  }, [close, reduced]);
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
           key="loader"
-          className="fixed inset-0 z-90 flex flex-col items-center justify-center bg-bg/97"
-          initial={{ clipPath: "inset(0 0 0% 0)" }}
-          exit={{ clipPath: "inset(0 0 100% 0)" }}
-          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+          className="fixed inset-0 z-90 flex items-center justify-center bg-bg px-4"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.9, delay: 0.15, ease: [0.4, 0, 0.2, 1] } }}
           role="status"
           aria-label="Loading portfolio"
         >
+          {/* Soft glow behind the editor */}
+          <div aria-hidden="true" className="pointer-events-none absolute size-112 rounded-full bg-accent/15 blur-[120px]" />
+
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotate: -8 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative grid size-24 place-items-center"
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.06, filter: "blur(10px)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full max-w-md"
           >
-            {/* Pulsing glow behind the logo */}
-            <span className="absolute inset-2 animate-pulse rounded-full shadow-[0_0_70px_10px_var(--glow)]" />
-            <Logo className="relative size-24" />
+            {reduced !== null && <CodeEditor start instant={reduced} speed={5} onDone={onDone} />}
           </motion.div>
-          <div className="mt-8 h-px w-48 overflow-hidden bg-line">
-            <div ref={bar} className="h-full origin-left scale-x-0 bg-accent" />
-          </div>
-          <p ref={counter} className="mt-4 font-mono text-xs tracking-[0.3em] text-muted tabular-nums">
-            000
-          </p>
         </motion.div>
       )}
     </AnimatePresence>

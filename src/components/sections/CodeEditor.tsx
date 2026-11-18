@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { heroCode } from "@/data/portfolio";
 import TiltCard from "@/components/ui/TiltCard";
 
@@ -75,12 +75,32 @@ function renderTyped(lines: Token[][], shown: number, done: boolean) {
  * Faux code editor that types out a `developer.ts` object.
  * Decorative (aria-hidden) — the same facts are in the hero text and About section.
  */
-export default function CodeEditor({ start, instant }: { start: boolean; instant: boolean }) {
+export default function CodeEditor({
+  start,
+  instant,
+  speed = 2,
+  onDone,
+}: {
+  start: boolean;
+  instant: boolean;
+  /** Characters typed per frame. */
+  speed?: number;
+  /** Called once when the code has finished typing. */
+  onDone?: () => void;
+}) {
   const lines = useMemo(() => buildLines(), []);
   const total = useMemo(() => lines.reduce((n, l) => n + l.reduce((m, [t]) => m + t.length, 0) + 1, 0), [lines]);
   const [typed, setTyped] = useState(0);
   const shown = instant ? total : typed;
   const done = shown >= total;
+
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  });
+  useEffect(() => {
+    if (start && done) onDoneRef.current?.();
+  }, [start, done]);
 
   // Typing loop: a few characters per frame, written via rAF.
   useEffect(() => {
@@ -90,13 +110,13 @@ export default function CodeEditor({ start, instant }: { start: boolean; instant
     const tick = (now: number) => {
       if (now - last > 16) {
         last = now;
-        setTyped((t) => Math.min(t + 2, total));
+        setTyped((t) => Math.min(t + speed, total));
       }
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [start, instant, total]);
+  }, [start, instant, total, speed]);
 
   const rendered = renderTyped(lines, shown, done);
 

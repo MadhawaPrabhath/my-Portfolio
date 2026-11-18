@@ -34,14 +34,14 @@ const hasWebGL = () => {
 const useWebGL = () => useSyncExternalStore(() => () => {}, hasWebGL, () => false);
 
 const fade: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: (d: number) => ({ opacity: 1, y: 0, transition: { duration: 0.8, delay: d, ease: [0.22, 1, 0.36, 1] } }),
+  hidden: { opacity: 0, y: 24, filter: "blur(8px)" },
+  show: (d: number) => ({ opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1, delay: d, ease: [0.22, 1, 0.36, 1] } }),
 };
 
 /** Transform-only variant: text is visible from the first paint (keeps LCP fast), it just glides into place. */
 const rise: Variants = {
-  hidden: { y: 16 },
-  show: (d: number) => ({ y: 0, transition: { duration: 0.8, delay: d, ease: [0.22, 1, 0.36, 1] } }),
+  hidden: { y: 28, filter: "blur(8px)" },
+  show: (d: number) => ({ y: 0, filter: "blur(0px)", transition: { duration: 1, delay: d, ease: [0.22, 1, 0.36, 1] } }),
 };
 
 /**

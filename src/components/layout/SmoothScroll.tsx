@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { setLenis } from "@/lib/scroll";
+import { isIntroDone } from "@/lib/store";
 import { useReducedMotion } from "@/hooks/useMediaQuery";
 
 /**
@@ -18,6 +19,8 @@ export default function SmoothScroll() {
 
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
     setLenis(lenis);
+    // The loader locks scrolling until the intro finishes (it calls lockScroll(false) when done).
+    if (!isIntroDone()) lenis.stop();
 
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => lenis.raf(time * 1000);
