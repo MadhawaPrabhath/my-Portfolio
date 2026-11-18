@@ -60,8 +60,8 @@ export const site = {
   title: "Madhawa Gunarathne — Software Engineer",
   description:
     "Portfolio of Madhawa Gunarathne, a Software Engineer and B.Sc. (Hons) Computer Science & Statistics graduate from the University of Peradeniya, focused on full-stack development, AI-driven automation and data analysis.",
-  /** Put your CV at /public/cv.pdf */
-  cvUrl: "/cv.pdf",
+  /** CV file in /public */
+  cvUrl: "/Madhawa_Gunarathne_CV.pdf",
 };
 
 export const profile = {
