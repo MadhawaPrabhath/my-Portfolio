@@ -28,7 +28,7 @@ function StatCard({ reduced }: { reduced: boolean }) {
   }, [inView, reduced, num, target, count]);
 
   return (
-    <div ref={ref} className="relative mt-6 md:mt-10">
+    <div ref={ref} className="relative order-last md:order-0 md:mt-10">
       {/* Soft glow behind the card */}
       <div aria-hidden="true" className="absolute -inset-3 rounded-3xl bg-accent/25 blur-2xl" />
 
@@ -128,13 +128,14 @@ export default function Experience() {
       </div>
 
       <div className="relative mx-auto mt-10 grid max-w-5xl gap-8 px-6 md:mt-12 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12">
-        <div className="min-w-0 md:self-start">
+        {/* On phones this wrapper "dissolves" (contents) so the stat card can move below the role details. */}
+        <div className="contents md:block md:min-w-0 md:self-start">
           {/* Role list */}
           <div
             role="tablist"
             aria-label="Roles"
             onKeyDown={onKeyDown}
-            className="flex overflow-x-auto border-b border-line [scrollbar-width:none] md:flex-col md:border-b-0 md:border-l"
+            className="flex flex-col border-l border-line"
           >
             {experience.map((j, i) => {
               const selected = i === active;
@@ -150,7 +151,7 @@ export default function Experience() {
                   aria-controls="exp-panel"
                   tabIndex={selected ? 0 : -1}
                   onClick={() => select(i)}
-                  className={`relative -mb-px shrink-0 border-b-2 px-4 py-3 text-left text-sm transition-colors duration-300 md:-ml-px md:mb-0 md:border-b-0 md:border-l-2 md:px-5 ${
+                  className={`relative -ml-px border-l-2 px-4 py-3 text-left text-sm transition-colors duration-300 md:px-5 ${
                     selected ? "border-accent bg-accent/5 text-accent-soft" : "border-transparent text-muted hover:bg-surface/40 hover:text-fg"
                   }`}
                 >
@@ -165,7 +166,7 @@ export default function Experience() {
         </div>
 
         {/* Selected role */}
-        <div id="exp-panel" role="tabpanel" aria-labelledby={`exp-tab-${active}`} className="min-h-96 min-w-0">
+        <div id="exp-panel" role="tabpanel" aria-labelledby={`exp-tab-${active}`} className="min-w-0 md:min-h-96">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={active}

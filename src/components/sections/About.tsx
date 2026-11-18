@@ -143,7 +143,7 @@ export default function About() {
           </div>
 
           {/* Stat tiles */}
-          <dl className="grid grid-cols-2 gap-4 self-start lg:col-span-5">
+          <dl className="grid grid-cols-2 gap-3 self-start sm:gap-4 lg:col-span-5">
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -151,14 +151,14 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease }}
-                className="group relative flex aspect-square flex-col-reverse justify-between overflow-hidden rounded-3xl border border-line bg-surface/60 p-6 transition-colors duration-500 hover:border-accent/50"
+                className="group relative flex min-h-40 flex-col-reverse justify-between gap-3 overflow-hidden rounded-3xl border border-line bg-surface/60 p-5 transition-colors sm:aspect-square sm:p-6 duration-500 hover:border-accent/50"
               >
                 <div
                   aria-hidden="true"
                   className="absolute -bottom-12 -right-12 size-40 rounded-full bg-accent/0 blur-3xl transition-colors duration-500 group-hover:bg-accent/30"
                 />
-                <dt className="relative text-sm text-muted">{s.label}</dt>
-                <dd className="relative font-display text-5xl font-bold text-accent-soft md:text-6xl">
+                <dt className="relative text-[13px] leading-snug text-muted sm:text-sm">{s.label}</dt>
+                <dd className="relative font-display text-4xl font-bold text-accent-soft sm:text-5xl md:text-6xl">
                   <CountUp value={s.value} />
                   {s.suffix}
                 </dd>

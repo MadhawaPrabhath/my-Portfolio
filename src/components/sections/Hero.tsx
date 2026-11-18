@@ -191,7 +191,7 @@ export default function Hero() {
           </motion.p>
 
           {/* 3. Headline — the role, not the name, is the hero */}
-          <h1 className="mt-3 font-display text-[5.6rem] font-bold leading-[1.05] tracking-[-0.03em] sm:text-5xl md:text-6xl lg:text-[2.85rem] xl:text-[3.3rem]">
+          <h1 className="mt-3 font-display text-[clamp(2.25rem,10vw,3rem)] font-bold leading-[1.05] tracking-[-0.03em] sm:text-5xl md:text-6xl lg:text-[2.85rem] xl:text-[3.3rem]">
             <motion.span variants={rise} custom={0.35} className="text-gradient block pb-1 lg:whitespace-nowrap">
               {hero.headline[0]}
             </motion.span>
@@ -205,6 +205,26 @@ export default function Hero() {
             {hero.rotatingPrefix} <RotatingWord words={hero.rotatingWords} />
             <span className="sr-only">{hero.rotatingWords.join(", ")}</span>
           </motion.p>
+
+          {/* Portrait — phones & tablets: compact crop (cap → chest) between the headline and the description */}
+          <motion.div
+            variants={fade}
+            custom={0.65}
+            className="relative mx-auto mt-6 h-[clamp(15rem,38vh,21rem)] w-full max-w-sm lg:hidden"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-[radial-gradient(closest-side_at_55%_55%,var(--glow)_0%,transparent_100%)]"
+            />
+            <Image
+              src={heroPhoto}
+              alt={profile.name}
+              fill
+              priority
+              sizes="(min-width: 1024px) 0px, 384px"
+              className="object-cover object-top [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
+            />
+          </motion.div>
 
           {/* 5. Description */}
           <motion.p variants={rise} custom={0.7} className="mt-5 max-w-xl text-lg leading-relaxed text-muted">

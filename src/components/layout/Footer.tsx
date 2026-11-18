@@ -41,7 +41,7 @@ export default function Footer() {
   return (
     <footer className="relative border-t border-line">
       <div className="w-full px-6 pt-14 md:px-24 xl:px-52">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-10 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
           {/* Decorative watermark — drawn via CSS content so it isn't treated as body text. */}
           <div
             aria-hidden="true"
