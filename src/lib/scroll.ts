@@ -30,13 +30,16 @@ export function scrollToSection(id: string) {
   const target = id === "top" ? 0 : document.getElementById(id);
   if (target === null) return;
 
-  if (lenis) {
-    lenis.scrollTo(target, { offset: id === "top" ? 0 : -72, duration: 1.4 });
-  } else if (target === 0) {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  } else {
-    target.scrollIntoView({ behavior: "smooth" });
+  // Skip the section's own top padding so its heading lands right under the fixed navbar.
+  let y = 0;
+  if (target !== 0) {
+    const navBottom = document.querySelector("header")?.offsetHeight ?? 72;
+    const padTop = parseFloat(getComputedStyle(target).paddingTop) || 0;
+    y = target.getBoundingClientRect().top + window.scrollY + padTop - navBottom - 24;
   }
+
+  if (lenis) lenis.scrollTo(Math.max(0, y), { duration: 1.4 });
+  else window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
 
   // Move keyboard focus to the section for screen-reader / keyboard users.
   if (target !== 0) {
