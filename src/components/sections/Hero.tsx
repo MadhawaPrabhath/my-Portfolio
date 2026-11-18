@@ -2,15 +2,15 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
-import { motion, type Variants } from "framer-motion";
-import { profile, site } from "@/data/portfolio";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { hero, profile, site, socials } from "@/data/portfolio";
 import { useIntroDone } from "@/lib/store";
 import { useIsMobile, useReducedMotion } from "@/hooks/useMediaQuery";
 import { scrollToSection } from "@/lib/scroll";
 import { gsap, useGSAP } from "@/lib/gsap";
 import Button from "@/components/ui/Button";
 import CodeEditor from "./CodeEditor";
-import { ArrowRightIcon, DownloadIcon, MailIcon } from "@/components/ui/Icons";
+import { ArrowRightIcon, DownloadIcon, GithubIcon, LinkedinIcon, MailIcon, MapPinIcon } from "@/components/ui/Icons";
 
 /* Three.js is ~600 KB — load it only in the browser, after the intro. */
 const CodeScene = dynamic(() => import("@/components/three/CodeScene"), { ssr: false });
@@ -29,11 +29,6 @@ const hasWebGL = () => {
   return webglCache;
 };
 const useWebGL = () => useSyncExternalStore(() => () => {}, hasWebGL, () => false);
-
-const letters: Variants = {
-  hidden: { y: "110%" },
-  show: (i: number) => ({ y: "0%", transition: { duration: 0.9, delay: 0.1 + i * 0.035, ease: [0.22, 1, 0.36, 1] } }),
-};
 
 const fade: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -80,31 +75,41 @@ function useDeferred3D(enabled: boolean, isMobile: boolean) {
   return armed;
 }
 
-/** Splits a word into individually animated letters (screen readers get the h1 aria-label). */
-function AnimatedWord({ word, offset, gradient }: { word: string; offset: number; gradient?: boolean }) {
-  const chars = word.split("");
+/**
+ * Cycles through words every 2.5s with a fade + slide-up.
+ * Decorative for screen readers (an sr-only sentence lists all the words instead).
+ */
+function RotatingWord({ words }: { words: string[] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % words.length), 2500);
+    return () => window.clearInterval(id);
+  }, [words.length]);
+
   return (
-    <span className="block overflow-hidden pb-[0.08em]" aria-hidden="true">
-      {chars.map((ch, i) => (
+    <span aria-hidden="true" className="relative inline-flex overflow-hidden pb-[0.1em] align-bottom">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.span
-          key={i}
-          custom={offset + i}
-          variants={letters}
-          className={`inline-block will-change-transform ${gradient ? "text-gradient" : ""}`}
-          // Transformed letters can't share one background-clip, so each letter shows its own
-          // slice of a word-wide gradient → reads as one continuous gradient.
-          style={
-            gradient
-              ? { backgroundSize: `${chars.length * 100}% 100%`, backgroundPosition: `${(i / Math.max(chars.length - 1, 1)) * 100}% 0` }
-              : undefined
-          }
+          key={words[index]}
+          initial={{ y: "100%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={{ y: "-100%", opacity: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="text-gradient inline-block font-semibold"
         >
-          {ch}
+          {words[index]}
         </motion.span>
-      ))}
+      </AnimatePresence>
     </span>
   );
 }
+
+const socialLinks = [
+  { href: socials.github, label: "GitHub", icon: GithubIcon, external: true },
+  { href: socials.linkedin, label: "LinkedIn", icon: LinkedinIcon, external: true },
+  { href: socials.email, label: "Email", icon: MailIcon, external: false },
+];
 
 export default function Hero() {
   const section = useRef<HTMLElement>(null);
@@ -161,22 +166,44 @@ export default function Hero() {
         className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-16 pt-28 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]"
       >
         <div>
+          {/* 1. Status badge */}
+          <motion.p
+            variants={fade}
+            custom={0.1}
+            className="inline-flex items-center gap-2.5 rounded-full border border-line bg-surface/60 px-4 py-1.5 text-sm text-fg/90 backdrop-blur"
+          >
+            <span className="relative flex size-2.5">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-70" />
+              <span className="relative inline-flex size-2.5 rounded-full bg-emerald-400" />
+            </span>
+            {hero.status}
+          </motion.p>
 
+          {/* 2. Greeting */}
+          <motion.p variants={rise} custom={0.25} className="mt-8 text-lg text-muted">
+            {hero.greeting}
+          </motion.p>
 
-        <h1
-          aria-label={`${profile.name}, ${profile.title}`}
-          className="font-display text-[clamp(3rem,11vw,6.25rem)] font-bold leading-[0.92] tracking-[-0.04em]"
-        >
-          <AnimatedWord word={profile.firstName} offset={0} />
-          <AnimatedWord word={profile.lastName} offset={profile.firstName.length} gradient />
-        </h1>
+          {/* 3. Headline — the role, not the name, is the hero */}
+          <h1 className="mt-3 font-display text-[2.6rem] font-bold leading-[1.05] tracking-[-0.03em] sm:text-5xl md:text-6xl lg:text-[2.85rem] xl:text-[3.3rem]">
+            <motion.span variants={rise} custom={0.35} className="text-gradient block pb-1 lg:whitespace-nowrap">
+              {hero.headline[0]}
+            </motion.span>
+            <motion.span variants={rise} custom={0.45} className="block text-fg lg:whitespace-nowrap">
+              {hero.headline[1]}
+            </motion.span>
+          </h1>
 
-        <motion.p variants={rise} custom={0.7} className="mt-6 font-display text-xl font-medium text-fg md:text-3xl">
-          {profile.title}
-        </motion.p>
-        <motion.p variants={rise} custom={0.8} className="mt-3 max-w-xl text-base text-muted md:text-lg">
-          {profile.tagline}
-        </motion.p>
+          {/* 4. Rotating line */}
+          <motion.p variants={rise} custom={0.6} className="mt-5 text-xl text-fg/90 md:text-2xl">
+            {hero.rotatingPrefix} <RotatingWord words={hero.rotatingWords} />
+            <span className="sr-only">{hero.rotatingWords.join(", ")}</span>
+          </motion.p>
+
+          {/* 5. Description */}
+          <motion.p variants={rise} custom={0.7} className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
+            {hero.description}
+          </motion.p>
 
         <motion.div variants={fade} custom={0.95} className="mt-10 flex flex-wrap gap-3">
           <Button
@@ -202,6 +229,29 @@ export default function Hero() {
             <MailIcon className="size-4" /> Contact
           </Button>
         </motion.div>
+
+          {/* 7. Social icons (links live in src/data/portfolio.ts → socials) */}
+          <motion.ul variants={fade} custom={1.05} className="mt-8 flex items-center gap-2" aria-label="Social links">
+            {socialLinks.map(({ href, label, icon: Icon, external }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  aria-label={label}
+                  className="grid size-10 place-items-center rounded-full border border-line text-muted transition-colors hover:border-accent hover:bg-accent-strong hover:text-white"
+                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                >
+                  <Icon className="size-[18px]" />
+                </a>
+              </li>
+            ))}
+          </motion.ul>
+
+          {/* 8. Info row */}
+          <motion.p variants={fade} custom={1.15} className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
+            <span className="inline-flex items-center gap-1.5">
+              <MapPinIcon className="size-4 text-accent-soft" /> {profile.location}
+            </span>
+          </motion.p>
         </div>
 
         {/* Code editor (desktop/tablet-landscape only — keeps the mobile hero short) */}

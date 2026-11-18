@@ -1,15 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { navItems, profile } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { scrollToSection } from "@/lib/scroll";
-import { useIntroDone } from "@/lib/store";
+import { useIntroDone, useTheme } from "@/lib/store";
 import ThemeToggle from "./ThemeToggle";
 import { CloseIcon, MenuIcon } from "@/components/ui/Icons";
 
 const ids = navItems.map((n) => n.id);
+
+/** false during SSR/hydration, true afterwards. */
+const useHydrated = () =>
+  useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+/**
+ * Theme-aware logo.
+ * logo-dark = white "M" (dark theme), logo-light = dark "M" (light theme).
+ * Before hydration the CSS rules in globals.css pick the right one (no flash);
+ * after hydration React also hides the other one inline, so it works even if that CSS is missing.
+ */
+function Logo() {
+  const theme = useTheme();
+  const hydrated = useHydrated();
+  const show = (forTheme: "dark" | "light") => (hydrated ? { display: theme === forTheme ? "block" : "none" } : undefined);
+
+  return (
+    <span aria-hidden="true" className="relative block size-10 shrink-0">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo-dark.webp" alt="" width={40} height={40} className="logo-for-dark absolute inset-0 size-10" style={show("dark")} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo-light.webp" alt="" width={40} height={40} className="logo-for-light absolute inset-0 size-10" style={show("light")} />
+    </span>
+  );
+}
 
 /**
  * Sticky navbar: glass background after scrolling, active-section pill,
@@ -56,13 +85,7 @@ export default function Navbar() {
         }`}
       >
         <a href="#top" onClick={go("top")} className="group flex items-center gap-2">
-          <span
-            aria-hidden="true"
-            className="grid size-9 place-items-center rounded-xl bg-accent-strong font-display text-sm font-bold text-white transition-transform group-hover:rotate-6"
-          >
-            {profile.initials}
-          </span>
-          <span className="hidden font-display text-sm font-semibold tracking-tight sm:block">{profile.firstName}</span>
+          <Logo />
           <span className="sr-only">{profile.name} — back to top</span>
         </a>
 

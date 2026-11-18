@@ -73,11 +73,22 @@ export const profile = {
   email: "madhawa.0516@gmail.com",
   phone: "+94 77 4148826",
   /** Path to your photo in /public (e.g. "/images/profile.jpg"). Leave as placeholder to show the styled fallback. */
-  photo: "[ADD PHOTO]",
+  photo: "/dp1.webp", // optimised copy of /public/dp1.png (transparent cut-out)
   bio: [
     "Recent B.Sc. (Hons) graduate in Applied Sciences (Computer Science and Statistics) from the University of Peradeniya, with a proven ability to design scalable web architectures and build full-stack applications.",
     "I automate complex workflows using n8n and AI, and transform complex datasets into interactive visual insights. I'm passionate about leveraging data analysis and modern full-stack engineering to deliver robust, real-world software products.",
   ],
+};
+
+/** Hero (left column) copy. */
+export const hero = {
+  status: "Open to work",
+  greeting: `Hi, I'm ${profile.name} 👋`,
+  headline: ["Full-Stack Developer", "building smart web apps"] as const,
+  rotatingPrefix: "with",
+  /** Cycles every 2.5s */
+  rotatingWords: ["AI Automation", "Data Analytics", "Modern Web Apps"],
+  description: "I build web apps end to end and make them smarter with AI automation and data-driven insights.",
 };
 
 /**
@@ -97,6 +108,34 @@ export const heroCode = {
   } as Record<string, string | string[]>,
   terminal: { command: "npm run build", output: "✓ Compiled successfully" },
 };
+
+/** About section — "What I do" cards (wording taken from the CV summary & skills). */
+export const whatIDo: { id: string; icon: "code" | "ai" | "chart"; title: string; text: string; tools: string[] }[] = [
+  {
+    id: "fullstack",
+    icon: "code",
+    title: "Full-Stack Development",
+    text: "Designing scalable web architectures and building full-stack applications end to end.",
+    tools: ["React", "Next.js", "Node.js", "FastAPI"],
+  },
+  {
+    id: "automation",
+    icon: "ai",
+    title: "AI & Automation",
+    text: "Automating complex workflows using n8n and AI.",
+    tools: ["n8n", "Docker", "Node.js"],
+  },
+  {
+    id: "data",
+    icon: "chart",
+    title: "Data Analysis",
+    text: "Transforming complex datasets into interactive visual insights and KPI dashboards.",
+    tools: ["Power BI", "Pandas", "SQL"],
+  },
+];
+
+/** Small chips floating around the About portrait. */
+export const portraitTags = ["</> Full-Stack", "n8n · AI", "Data Viz"];
 
 export const socials = {
   github: "https://github.com/MadhawaPrabhath",

@@ -114,7 +114,27 @@ export const BriefcaseIcon = (p: IconProps) => (
   </svg>
 );
 
-export const SendIcon = (p: IconProps) => (
+export const CodeIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="m16 18 6-6-6-6M8 6l-6 6 6 6M14.5 4l-5 16" />
+  </svg>
+);
+
+export const SparkIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <rect x="4" y="4" width="16" height="16" rx="3" />
+    <path d="M9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" />
+  </svg>
+);
+
+export const ChartIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M3 3v18h18" />
+    <path d="m7 15 4-4 3 3 5-6" />
+  </svg>
+);
+
+export const SendIcon =(p: IconProps) => (
   <svg {...base(p)}>
     <path d="m22 2-7 20-4-9-9-4 20-7zM22 2 11 13" />
   </svg>
