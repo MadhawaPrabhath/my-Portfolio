@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { profile, socials } from "@/data/portfolio";
+import { profile, socialHandles, socials } from "@/data/portfolio";
 import { sendContactMessage, type ContactPayload } from "@/lib/contact";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
-import { GithubIcon, LinkedinIcon, MailIcon, MapPinIcon, PhoneIcon, SendIcon } from "@/components/ui/Icons";
+import { GithubIcon, LinkedinIcon, MailIcon, PhoneIcon, SendIcon, WhatsappIcon } from "@/components/ui/Icons";
 
 type Status = { kind: "idle" } | { kind: "sending" } | { kind: "success"; message: string } | { kind: "error"; message: string };
 type Errors = Partial<Record<keyof ContactPayload, string>>;
@@ -17,7 +17,7 @@ const contactItems = [
   { icon: PhoneIcon, label: "Phone", value: profile.phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
   { icon: LinkedinIcon, label: "LinkedIn", value: "madhawa-gunarathne", href: socials.linkedin, external: true },
   { icon: GithubIcon, label: "GitHub", value: "MadhawaPrabhath", href: socials.github, external: true },
-  { icon: MapPinIcon, label: "Location", value: profile.location },
+  { icon: WhatsappIcon, label: "WhatsApp", value: socialHandles.whatsapp, href: socials.whatsapp, external: true },
 ];
 
 function validate(data: ContactPayload): Errors {
@@ -105,7 +105,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="relative scroll-mt-24 py-28 md:py-40">
+    <section id="contact" aria-labelledby="contact-title" className="relative scroll-mt-24 py-16 md:py-20">
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(ellipse_at_bottom,var(--glow),transparent_65%)]" />
       <div className="relative mx-auto max-w-6xl px-6">
         <SectionHeading

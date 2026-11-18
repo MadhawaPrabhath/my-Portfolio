@@ -1,44 +1,16 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { navItems, profile } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { scrollToSection } from "@/lib/scroll";
-import { useIntroDone, useTheme } from "@/lib/store";
+import { useIntroDone } from "@/lib/store";
 import ThemeToggle from "./ThemeToggle";
+import Logo from "@/components/ui/Logo";
 import { CloseIcon, MenuIcon } from "@/components/ui/Icons";
 
 const ids = navItems.map((n) => n.id);
-
-/** false during SSR/hydration, true afterwards. */
-const useHydrated = () =>
-  useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-
-/**
- * Theme-aware logo.
- * logo-dark = white "M" (dark theme), logo-light = dark "M" (light theme).
- * Before hydration the CSS rules in globals.css pick the right one (no flash);
- * after hydration React also hides the other one inline, so it works even if that CSS is missing.
- */
-function Logo() {
-  const theme = useTheme();
-  const hydrated = useHydrated();
-  const show = (forTheme: "dark" | "light") => (hydrated ? { display: theme === forTheme ? "block" : "none" } : undefined);
-
-  return (
-    <span aria-hidden="true" className="relative block size-10 shrink-0">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/logo-dark.webp" alt="" width={40} height={40} className="logo-for-dark absolute inset-0 size-10" style={show("dark")} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/logo-light.webp" alt="" width={40} height={40} className="logo-for-light absolute inset-0 size-10" style={show("light")} />
-    </span>
-  );
-}
 
 /**
  * Sticky navbar: glass background after scrolling, active-section pill,
@@ -81,8 +53,20 @@ export default function Navbar() {
       <nav
         aria-label="Primary"
         className={`mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 py-2.5 transition-all duration-500 md:px-6 ${
-          scrolled ? "glass shadow-lg shadow-black/10" : "border border-transparent"
+          scrolled ? "shadow-lg shadow-black/20" : ""
         }`}
+        // Translucent glass once scrolled; the blur keeps the links readable over content.
+        // Inline (not a CSS class) so it can't be lost to a stale stylesheet.
+        style={
+          scrolled
+            ? {
+                background: "color-mix(in oklab, var(--bg) 55%, transparent)",
+                backdropFilter: "blur(24px) saturate(1.4)",
+                WebkitBackdropFilter: "blur(24px) saturate(1.4)",
+                border: "1px solid var(--border)",
+              }
+            : { border: "1px solid transparent" }
+        }
       >
         <a href="#top" onClick={go("top")} className="group flex items-center gap-2">
           <Logo />

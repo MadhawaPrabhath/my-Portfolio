@@ -91,17 +91,6 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Hide the native cursor only when the custom cursor is active (desktop, fine pointer) */
-html.has-custom-cursor,
-html.has-custom-cursor a,
-html.has-custom-cursor button {
-  cursor: none;
-}
-html.has-custom-cursor input,
-html.has-custom-cursor textarea {
-  cursor: text;
-}
-
 /* Subtle film-grain + grid backdrop */
 .bg-grid {
   background-image: linear-gradient(var(--border) 1px, transparent 1px),

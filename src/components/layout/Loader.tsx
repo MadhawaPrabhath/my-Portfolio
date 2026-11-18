@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { finishIntro } from "@/lib/store";
-import { profile } from "@/data/portfolio";
+import Logo from "@/components/ui/Logo";
 
 /**
  * Intro loading screen: a counter + monogram, then a curtain wipe.
@@ -54,10 +54,11 @@ export default function Loader() {
             initial={{ opacity: 0, scale: 0.8, rotate: -8 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative grid size-20 place-items-center rounded-2xl border border-line"
+            className="relative grid size-24 place-items-center"
           >
-            <span className="font-display text-3xl font-bold text-accent-soft">{profile.initials}</span>
-            <span className="absolute inset-0 animate-pulse rounded-2xl shadow-[0_0_60px_var(--glow)]" />
+            {/* Pulsing glow behind the logo */}
+            <span className="absolute inset-2 animate-pulse rounded-full shadow-[0_0_70px_10px_var(--glow)]" />
+            <Logo className="relative size-24" />
           </motion.div>
           <div className="mt-8 h-px w-48 overflow-hidden bg-line">
             <div ref={bar} className="h-full origin-left scale-x-0 bg-accent" />

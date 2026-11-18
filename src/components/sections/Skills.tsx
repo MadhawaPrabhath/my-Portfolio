@@ -1,75 +1,97 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { skillGroups } from "@/data/portfolio";
 import { useReducedMotion } from "@/hooks/useMediaQuery";
 import SectionHeading from "@/components/ui/SectionHeading";
 import TagSphere from "./TagSphere";
 
+const ease = [0.22, 1, 0.36, 1] as const;
+const total = skillGroups.reduce((n, g) => n + g.skills.length, 0);
+const pad = (n: number) => String(n).padStart(2, "0");
+
 /**
- * Skills: interactive 3D tag sphere + grouped cards.
- * Hovering / focusing a group card highlights its skills inside the sphere.
+ * Skills — sphere-centred layout:
+ *   giant outlined "SKILLS" behind a 3D tag sphere with orbit rings,
+ *   category chips that filter / highlight the sphere,
+ *   and a panel listing the selected group's skills (the accessible version of the sphere).
  */
 export default function Skills() {
   const reduced = useReducedMotion();
-  const [active, setActive] = useState<string | null>(null);
+  const section = useRef<HTMLElement>(null);
+  const [selected, setSelected] = useState<string | null>(null); // clicked chip (null = All)
+  const [hovered, setHovered] = useState<string | null>(null); // hover preview
+  const active = hovered ?? selected;
+
+
 
   return (
-    <section id="skills" aria-labelledby="skills-title" className="relative scroll-mt-24 py-28 md:py-40">
-      <div className="mx-auto max-w-6xl px-6">
-        <SectionHeading
-          index="02"
-          eyebrow="Skills"
-          id="skills-title"
-          description="Spin the sphere, or hover a group to see where it lives."
-        />
+    <section ref={section} id="skills" aria-labelledby="skills-title" className="relative scroll-mt-24 overflow-hidden py-16 md:py-20">
+      {/* Label aligned to the same 6xl column as the other sections */}
+      <div className="relative mx-auto max-w-6xl px-6">
+        <SectionHeading index="02" eyebrow="Skills" id="skills-title" className="mb-6 md:mb-10" />
+      </div>
 
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+      {/* Sphere on top, category chips centred underneath */}
+      <div className="relative mx-auto grid max-w-6xl justify-items-center gap-8 px-6">
+        <div className="relative w-full">
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.1, ease }}
+            className="relative"
           >
             <TagSphere groups={skillGroups} activeGroup={active} reduced={reduced} />
           </motion.div>
+        </div>
 
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {skillGroups.map((group, i) => (
-              <motion.li
-                key={group.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, delay: i * 0.06 }}
-                className={group.skills.length > 8 ? "sm:col-span-2" : ""}
-              >
-                <div
-                  tabIndex={0}
-                  onPointerEnter={() => setActive(group.id)}
-                  onPointerLeave={() => setActive(null)}
-                  onFocus={() => setActive(group.id)}
-                  onBlur={() => setActive(null)}
-                  className={`h-full rounded-2xl border p-5 transition-colors duration-300 ${
-                    active === group.id ? "border-accent bg-accent/5" : "border-line bg-surface/60"
+        {/* Category chips */}
+        <div
+          role="group"
+          aria-label="Filter skills by category"
+          className="flex max-w-4xl flex-wrap justify-center gap-2"
+          onPointerLeave={() => setHovered(null)}
+        >
+          {[{ id: null, label: "All", count: total }, ...skillGroups.map((g) => ({ id: g.id, label: g.label, count: g.skills.length }))].map(
+            (c, i) => {
+              const isOn = selected === c.id;
+              return (
+                <motion.button
+                  key={c.label}
+                  type="button"
+                  aria-pressed={isOn}
+                  onClick={() => setSelected(c.id)}
+                  onPointerEnter={() => setHovered(c.id)}
+                  onFocus={() => setHovered(c.id)}
+                  onBlur={() => setHovered(null)}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.05, ease }}
+                  className={`relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors ${
+                    isOn ? "text-white" : "border border-line text-muted hover:border-accent/60 hover:text-fg"
                   }`}
                 >
-                  <h3 className="mb-3 flex items-center justify-between font-display text-lg font-semibold">
-                    {group.label}
-                    <span className="font-mono text-xs text-muted">{String(group.skills.length).padStart(2, "0")}</span>
-                  </h3>
-                  <ul className="flex flex-wrap gap-1.5" aria-label={`${group.label} skills`}>
-                    {group.skills.map((s) => (
-                      <li key={s} className="rounded-md bg-surface-2 px-2 py-1 text-xs text-muted">
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.li>
-            ))}
-          </ul>
+                  {isOn && <motion.span layoutId="skill-chip" className="absolute inset-0 rounded-full bg-accent-strong" />}
+                  <span className="relative">{c.label}</span>
+                  <span className={`relative font-mono text-[11px] ${isOn ? "text-white/70" : "text-muted/70"}`}>{pad(c.count)}</span>
+                </motion.button>
+              );
+            },
+          )}
+        </div>
+
+        {/* Screen-reader list of every skill (the sphere itself is decorative) */}
+        <div className="sr-only">
+          {skillGroups.map((g) => (
+            <ul key={g.id} aria-label={`${g.label} skills`}>
+              {g.skills.map((sk) => (
+                <li key={sk}>{sk}</li>
+              ))}
+            </ul>
+          ))}
         </div>
       </div>
     </section>

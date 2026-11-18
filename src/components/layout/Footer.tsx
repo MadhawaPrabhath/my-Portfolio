@@ -2,12 +2,15 @@
 
 import { profile, socials } from "@/data/portfolio";
 import { scrollToSection } from "@/lib/scroll";
-import { ArrowUpIcon, GithubIcon, LinkedinIcon, MailIcon } from "@/components/ui/Icons";
+import { ArrowUpIcon, GithubIcon, LinkedinIcon, MailIcon, InstagramIcon, FacebookIcon, WhatsappIcon } from "@/components/ui/Icons";
 
 const links = [
   { href: socials.github, label: "GitHub", icon: GithubIcon, external: true },
   { href: socials.linkedin, label: "LinkedIn", icon: LinkedinIcon, external: true },
   { href: socials.email, label: "Email", icon: MailIcon, external: false },
+  { href: socials.instagram, label: "Instagram", icon: InstagramIcon, external: true },
+  { href: socials.facebook, label: "Facebook", icon: FacebookIcon, external: true },
+  { href: socials.whatsapp, label: "WhatsApp", icon: WhatsappIcon, external: true },
 ];
 
 /** Footer: oversized name, social links and back-to-top. */

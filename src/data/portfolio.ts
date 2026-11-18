@@ -37,6 +37,8 @@ export type Project = {
   description: string;
   stack: string[];
   status?: "Ongoing" | "Completed";
+  /** Cover image in /public (screenshot, mock-up or AI image). Optional — falls back to a gradient. */
+  image?: string;
   github: string;
   live: string;
 };
@@ -109,6 +111,17 @@ export const heroCode = {
   terminal: { command: "npm run build", output: "✓ Compiled successfully" },
 };
 
+/** About section — "Journey" mini-timeline (facts from the CV). */
+export const journey = [
+  { year: "2021", title: "Started B.Sc. (Hons)", text: "Applied Science — Computer Science & Statistics, University of Peradeniya." },
+  { year: "2025", title: "Graduated", text: "Completed the degree (Feb 2021 — Dec 2025)." },
+  {
+    year: "2026",
+    title: "Software Engineer Intern",
+    text: "FocalId Technologies — microservices HRM system with FastAPI, React/Next.js & PostgreSQL.",
+  },
+];
+
 /** About section — "What I do" cards (wording taken from the CV summary & skills). */
 export const whatIDo: { id: string; icon: "code" | "ai" | "chart"; title: string; text: string; tools: string[] }[] = [
   {
@@ -134,13 +147,21 @@ export const whatIDo: { id: string; icon: "code" | "ai" | "chart"; title: string
   },
 ];
 
-/** Small chips floating around the About portrait. */
-export const portraitTags = ["</> Full-Stack", "n8n · AI", "Data Viz"];
-
 export const socials = {
   github: "https://github.com/MadhawaPrabhath",
   linkedin: "https://www.linkedin.com/in/madhawa-gunarathne-859287135/",
   email: `mailto:${profile.email}`,
+  instagram: "https://www.instagram.com/___madhawa/",
+  facebook: "https://www.facebook.com/madhawa.prabhath.9",
+  /** WhatsApp click-to-chat link (number without "+" or spaces) */
+  whatsapp: "https://wa.me/94774148826",
+};
+
+/** Display handles for the contact list. */
+export const socialHandles = {
+  instagram: "@___madhawa",
+  facebook: "madhawa.prabhath.9",
+  whatsapp: "+94 77 414 8826",
 };
 
 export const skillGroups: SkillGroup[] = [
@@ -190,6 +211,19 @@ export const skillGroups: SkillGroup[] = [
 
 export const experience: Experience[] = [
   {
+    role: "Full-Stack Developer",
+    company: "Freelance",
+    period: "2024 — Present",
+    summary:
+      "Building full-stack web applications end to end since my third year of university — from responsive React/Next.js frontends to Node.js/Express APIs and SQL/NoSQL databases.",
+    highlights: [
+      "ClassMaster — online class management platform (React, Node.js, Tailwind CSS, MySQL).",
+      "SK Electricals Selling Platform — selling platform for an electrical store (Next.js, Node.js, Express.js, MongoDB).",
+      "HR Chatbot — AI/NLP web application with n8n automation (React, Node.js, n8n, Docker).",
+    ],
+    stack: ["React", "Next.js", "Node.js", "Express.js", "MySQL", "MongoDB", "Tailwind CSS"],
+  },
+  {
     role: "Software Engineer — Intern",
     company: "FocalId Technologies",
     period: "Jan 2026 — Jul 2026",
@@ -208,6 +242,7 @@ export const experience: Experience[] = [
 export const projects: Project[] = [
   {
     slug: "hr-chatbot",
+    image: "/projects/hr-chatbot.svg", // placeholder illustration — replace with a real screenshot / AI image
     title: "HR Chatbot",
     category: "AI & Automation",
     short: "\"HR Chatbot\" web application — an AI/NLP project.",
@@ -218,6 +253,7 @@ export const projects: Project[] = [
   },
   {
     slug: "classmaster",
+    image: "/projects/classmaster.svg", // placeholder illustration — replace with a real screenshot / AI image
     title: "ClassMaster",
     category: "Full-Stack",
     short: "Online Class Management Platform — full-stack project.",
@@ -228,10 +264,11 @@ export const projects: Project[] = [
   },
   {
     slug: "sk-electricals",
+    image: "/projects/sk-electricals.svg", // placeholder illustration — replace with a real screenshot / AI image
     title: "SK Electricals Selling Platform",
     category: "Full-Stack",
     short: "Full-stack web application for an electrical store.",
-    description: "Full-stack selling platform (web application) for an electrical store. This project is ongoing. [ADD DESCRIPTION]",
+    description: "Full-stack selling platform (web application) for an electrical store. [ADD DESCRIPTION]",
     stack: ["Next.js", "Node.js", "Express.js", "MongoDB"],
     status: "Ongoing",
     github: "[ADD LINK]",
@@ -239,6 +276,7 @@ export const projects: Project[] = [
   },
   {
     slug: "betel-leaf-disease-detector",
+    image: "/projects/betel-leaf-disease-detector.svg", // placeholder illustration — replace with a real screenshot / AI image
     title: "Betel Leaf Disease Detector",
     category: "Image Processing",
     short: "Digital image processing project for detecting betel leaf disease.",
@@ -249,6 +287,7 @@ export const projects: Project[] = [
   },
   {
     slug: "covid-19-dashboard",
+    image: "/projects/covid-19-dashboard.svg", // placeholder illustration — replace with a real screenshot / AI image
     title: "COVID-19 Data Analysis Dashboard",
     category: "Data Analytics",
     short: "Interactive Power BI dashboard analysing COVID-19 trends.",
@@ -260,6 +299,7 @@ export const projects: Project[] = [
   },
   {
     slug: "transport-dashboard",
+    image: "/projects/transport-dashboard.svg", // placeholder illustration — replace with a real screenshot / AI image
     title: "Transport Data Analysis Dashboard",
     category: "Data Analytics",
     short: "Power BI dashboards and KPIs for transport-related data.",
@@ -295,7 +335,8 @@ export const education: Education[] = [
 export const navItems = [
   { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
+  { id: "services", label: "What I Do" },
   { id: "projects", label: "Projects" },
+  { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
 ] as const;

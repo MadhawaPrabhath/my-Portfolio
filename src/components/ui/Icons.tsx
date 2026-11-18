@@ -134,6 +134,27 @@ export const ChartIcon = (p: IconProps) => (
   </svg>
 );
 
+export const InstagramIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" />
+  </svg>
+);
+
+export const FacebookIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+export const WhatsappIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M3 21l1.65-3.8A9 9 0 1 1 8.4 20.3z" />
+    <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+  </svg>
+);
+
 export const SendIcon =(p: IconProps) => (
   <svg {...base(p)}>
     <path d="m22 2-7 20-4-9-9-4 20-7zM22 2 11 13" />

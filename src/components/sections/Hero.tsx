@@ -9,8 +9,11 @@ import { useIsMobile, useReducedMotion } from "@/hooks/useMediaQuery";
 import { scrollToSection } from "@/lib/scroll";
 import { gsap, useGSAP } from "@/lib/gsap";
 import Button from "@/components/ui/Button";
-import CodeEditor from "./CodeEditor";
-import { ArrowRightIcon, DownloadIcon, GithubIcon, LinkedinIcon, MailIcon, MapPinIcon } from "@/components/ui/Icons";
+import Image from "next/image";
+
+/** Hero portrait — optimised copy of /public/dp2.png (transparent cut-out). */
+const heroPhoto = "/dp2.webp";
+import { ArrowRightIcon, DownloadIcon, GithubIcon, LinkedinIcon, MailIcon, MapPinIcon, InstagramIcon, FacebookIcon, WhatsappIcon } from "@/components/ui/Icons";
 
 /* Three.js is ~600 KB — load it only in the browser, after the intro. */
 const CodeScene = dynamic(() => import("@/components/three/CodeScene"), { ssr: false });
@@ -109,6 +112,9 @@ const socialLinks = [
   { href: socials.github, label: "GitHub", icon: GithubIcon, external: true },
   { href: socials.linkedin, label: "LinkedIn", icon: LinkedinIcon, external: true },
   { href: socials.email, label: "Email", icon: MailIcon, external: false },
+  { href: socials.instagram, label: "Instagram", icon: InstagramIcon, external: true },
+  { href: socials.facebook, label: "Facebook", icon: FacebookIcon, external: true },
+  { href: socials.whatsapp, label: "WhatsApp", icon: WhatsappIcon, external: true },
 ];
 
 export default function Hero() {
@@ -185,7 +191,7 @@ export default function Hero() {
           </motion.p>
 
           {/* 3. Headline — the role, not the name, is the hero */}
-          <h1 className="mt-3 font-display text-[2.6rem] font-bold leading-[1.05] tracking-[-0.03em] sm:text-5xl md:text-6xl lg:text-[2.85rem] xl:text-[3.3rem]">
+          <h1 className="mt-3 font-display text-[5.6rem] font-bold leading-[1.05] tracking-[-0.03em] sm:text-5xl md:text-6xl lg:text-[2.85rem] xl:text-[3.3rem]">
             <motion.span variants={rise} custom={0.35} className="text-gradient block pb-1 lg:whitespace-nowrap">
               {hero.headline[0]}
             </motion.span>
@@ -254,9 +260,22 @@ export default function Hero() {
           </motion.p>
         </div>
 
-        {/* Code editor (desktop/tablet-landscape only — keeps the mobile hero short) */}
-        <motion.div variants={fade} custom={0.6} className="hidden lg:block">
-          <CodeEditor start={introDone} instant={reduced} />
+        {/* Portrait (desktop/tablet-landscape only — keeps the mobile hero short) */}
+        <motion.div variants={fade} custom={0.6} className="relative hidden h-[min(72vh,640px)] translate-x-10 lg:block xl:translate-x-30 translate-y-10">
+          {/* Glow so the dark jacket separates from the dark background */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[radial-gradient(closest-side_at_62%_55%,var(--glow)_0%,transparent_100%)]"
+          />
+          {/* Photo; its bottom edge fades out via a mask (no overlay box) */}
+          <Image
+            src={heroPhoto}
+            alt={profile.name}
+            fill
+            priority
+            sizes="(min-width: 1024px) 40vw, 0px"
+            className="object-contain object-bottom [mask-image:linear-gradient(to_bottom,black_78%,transparent)]"
+          />
         </motion.div>
       </motion.div>
 

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+<defs>
+  <radialGradient id="g1" cx="15%" cy="10%" r="70%"><stop offset="0" stop-color="#7c5cff" stop-opacity=".55"/><stop offset="1" stop-color="#7c5cff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g2" cx="95%" cy="100%" r="60%"><stop offset="0" stop-color="#3dd6f5" stop-opacity=".45"/><stop offset="1" stop-color="#3dd6f5" stop-opacity="0"/></radialGradient>
+  <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#3dd6f5"/></linearGradient>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity=".05"/></pattern>
+  <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity=".5"/></filter>
+</defs>
+<rect width="800" height="450" fill="#0d0b18"/>
+<rect width="800" height="450" fill="url(#grid)"/>
+<rect width="800" height="450" fill="url(#g1)"/>
+<rect width="800" height="450" fill="url(#g2)"/>
+
+
+<g filter="url(#sh)"><rect x="60" y="50" width="680" height="350" rx="18" fill="#15132a" stroke="#ffffff" stroke-opacity=".08"/></g>
+<circle cx="82" cy="70" r="5" fill="#ff5f57"/><circle cx="100" cy="70" r="5" fill="#febc2e"/><circle cx="118" cy="70" r="5" fill="#28c840"/>
+<text x="400" y="75" text-anchor="middle" font-family="monospace" font-size="12" fill="#6f6a91">transport · kpi dashboard</text>
+<line x1="60" y1="90" x2="740" y2="90" stroke="#ffffff" stroke-opacity=".06"/>
+<rect x="80" y="110" width="300" height="270" rx="12" fill="#1d1a38"/>
+<path d="M110 340 C160 300 140 240 200 220 S280 200 290 150 S340 130 350 130" stroke="url(#lg)" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M110 160 C170 190 220 260 300 270 S350 330 360 350" stroke="#6f6a91" stroke-width="3" fill="none" stroke-dasharray="4 8" stroke-linecap="round"/>
+<circle cx="110" cy="340" r="9" fill="#0d0b18" stroke="#3dd6f5" stroke-width="3"/><circle cx="200" cy="220" r="9" fill="#0d0b18" stroke="#3dd6f5" stroke-width="3"/><circle cx="290" cy="150" r="9" fill="#0d0b18" stroke="#3dd6f5" stroke-width="3"/><circle cx="350" cy="130" r="9" fill="#0d0b18" stroke="#3dd6f5" stroke-width="3"/>
+<g transform="translate(240 186)"><rect x="-22" y="-14" width="44" height="26" rx="7" fill="#7c5cff"/><rect x="-16" y="-9" width="12" height="9" rx="2" fill="#fff" fill-opacity=".8"/><rect x="0" y="-9" width="12" height="9" rx="2" fill="#fff" fill-opacity=".8"/><circle cx="-12" cy="13" r="4" fill="#fff"/><circle cx="12" cy="13" r="4" fill="#fff"/></g>
+<rect x="400" y="110" width="154" height="74" rx="12" fill="#1d1a38"/><text x="414" y="134" font-family="sans-serif" font-size="12" fill="#6f6a91">Passengers</text><text x="414" y="166" font-family="sans-serif" font-size="21" font-weight="700" fill="#3dd6f5">84,210</text><rect x="566" y="110" width="154" height="74" rx="12" fill="#1d1a38"/><text x="580" y="134" font-family="sans-serif" font-size="12" fill="#6f6a91">Tickets</text><text x="580" y="166" font-family="sans-serif" font-size="21" font-weight="700" fill="#a895ff">Rs 3.2M</text>
+<rect x="400" y="198" width="320" height="182" rx="12" fill="#1d1a38"/>
+<rect x="422" y="300" width="22" height="60" rx="5" fill="#7c5cff" fill-opacity="0.7"/><rect x="458" y="265" width="22" height="95" rx="5" fill="#7c5cff" fill-opacity="0.7"/><rect x="494" y="285" width="22" height="75" rx="5" fill="#7c5cff" fill-opacity="0.7"/><rect x="530" y="240" width="22" height="120" rx="5" fill="#7c5cff" fill-opacity="0.7"/><rect x="566" y="255" width="22" height="105" rx="5" fill="#7c5cff" fill-opacity="0.7"/><rect x="602" y="220" width="22" height="140" rx="5" fill="#3dd6f5" fill-opacity="1"/><rect x="638" y="270" width="22" height="90" rx="5" fill="#7c5cff" fill-opacity="0.7"/><rect x="674" y="230" width="22" height="130" rx="5" fill="#7c5cff" fill-opacity="0.7"/>
+<path d="M433 330 L469 300 L505 315 L541 270 L577 280 L613 240 L649 290 L685 250" stroke="#3dd6f5" stroke-width="2" fill="none" stroke-dasharray="4 4" opacity=".8"/>
+
+</svg>

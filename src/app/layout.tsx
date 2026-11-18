@@ -4,7 +4,6 @@ import "./globals.css";
 import { profile, site, socials } from "@/data/portfolio";
 import Navbar from "@/components/layout/Navbar";
 import Loader from "@/components/layout/Loader";
-import Cursor from "@/components/layout/Cursor";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import MotionProvider from "@/components/layout/MotionProvider";
 
@@ -79,7 +78,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MotionProvider>
           <Loader />
           <SmoothScroll />
-          <Cursor />
           <Navbar />
           {children}
         </MotionProvider>

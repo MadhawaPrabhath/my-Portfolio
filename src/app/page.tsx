@@ -1,5 +1,6 @@
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
+import Services from "@/components/sections/Services";
 import Skills from "@/components/sections/Skills";
 import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
@@ -17,7 +18,7 @@ const jsonLd = {
   email: `mailto:${profile.email}`,
   address: { "@type": "PostalAddress", addressLocality: "Dambulla", addressRegion: "Central Province", addressCountry: "LK" },
   alumniOf: { "@type": "CollegeOrUniversity", name: education[0].institution },
-  sameAs: [socials.github, socials.linkedin],
+  sameAs: [socials.github, socials.linkedin, socials.instagram, socials.facebook],
 };
 
 export default function Home() {
@@ -27,8 +28,9 @@ export default function Home() {
         <Hero />
         <About />
         <Skills />
-        <Experience />
+        <Services />
         <Projects />
+        <Experience />
         <Contact />
       </main>
       <Footer />

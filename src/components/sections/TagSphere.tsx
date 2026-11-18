@@ -128,10 +128,29 @@ export default function TagSphere({ groups, activeGroup, reduced }: Props) {
     <div
       ref={container}
       aria-hidden="true"
-      data-cursor="hover"
-      className="relative mx-auto aspect-square w-full max-w-[520px] touch-pan-y select-none active:cursor-grabbing"
+      className="relative mx-auto aspect-square w-full max-w-[640px] touch-pan-y select-none [perspective:1200px] active:cursor-grabbing"
     >
-      <div className="absolute inset-[15%] rounded-full bg-accent/10 blur-3xl" />
+      {/* Core glow */}
+      <div className="absolute inset-[18%] rounded-full bg-accent/15 blur-3xl" />
+      <div className="absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-soft shadow-[0_0_30px_8px_var(--glow)]" />
+
+      {/* Orbit rings (tilted ellipses with a travelling dot) */}
+      {[
+        { inset: "2%", tilt: "rotateX(74deg) rotateZ(-18deg)", dur: "22s", dir: "normal", color: "var(--accent)" },
+        { inset: "9%", tilt: "rotateX(68deg) rotateY(28deg)", dur: "30s", dir: "reverse", color: "var(--accent-2)" },
+      ].map((r, i) => (
+        <div key={i} className="pointer-events-none absolute" style={{ inset: r.inset, transform: r.tilt, transformStyle: "preserve-3d" }}>
+          <div
+            className="absolute inset-0 rounded-full border border-dashed opacity-40"
+            style={{ borderColor: r.color, animation: reduced ? undefined : `spin ${r.dur} linear infinite ${r.dir}` }}
+          >
+            <span
+              className="absolute -top-1 left-1/2 size-2 -translate-x-1/2 rounded-full"
+              style={{ background: r.color, boxShadow: `0 0 14px 3px ${r.color}` }}
+            />
+          </div>
+        </div>
+      ))}
       <div className="absolute left-1/2 top-1/2">
         {tags.map((t, i) => {
           const dim = activeGroup !== null && activeGroup !== t.group;

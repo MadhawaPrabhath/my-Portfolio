@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+<defs>
+  <radialGradient id="g1" cx="15%" cy="10%" r="70%"><stop offset="0" stop-color="#2fbf71" stop-opacity=".55"/><stop offset="1" stop-color="#2fbf71" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g2" cx="95%" cy="100%" r="60%"><stop offset="0" stop-color="#3dd6f5" stop-opacity=".45"/><stop offset="1" stop-color="#3dd6f5" stop-opacity="0"/></radialGradient>
+  <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#3dd6f5"/></linearGradient>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity=".05"/></pattern>
+  <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity=".5"/></filter>
+</defs>
+<rect width="800" height="450" fill="#0d0b18"/>
+<rect width="800" height="450" fill="url(#grid)"/>
+<rect width="800" height="450" fill="url(#g1)"/>
+<rect width="800" height="450" fill="url(#g2)"/>
+
+<g filter="url(#sh)"><rect x="70" y="50" width="400" height="350" rx="18" fill="#15132a" stroke="#ffffff" stroke-opacity=".08"/></g>
+<path d="M270 360 C140 330 110 200 170 120 C210 70 290 70 330 110 C400 180 380 320 270 360Z" fill="#2fbf71" fill-opacity=".85"/>
+<path d="M270 360 C260 270 255 180 300 100" stroke="#1d8a50" stroke-width="5" fill="none"/>
+<path d="M266 200 Q205 170 185 190" stroke="#1d8a50" stroke-width="2.5" fill="none" opacity=".7"/><path d="M262 260 Q215 230 195 250" stroke="#1d8a50" stroke-width="2.5" fill="none" opacity=".7"/><path d="M266 180 Q250 150 230 170" stroke="#1d8a50" stroke-width="2.5" fill="none" opacity=".7"/><path d="M262 230 Q310 200 290 220" stroke="#1d8a50" stroke-width="2.5" fill="none" opacity=".7"/><path d="M266 290 Q300 260 280 280" stroke="#1d8a50" stroke-width="2.5" fill="none" opacity=".7"/><path d="M262 300 Q235 270 215 290" stroke="#1d8a50" stroke-width="2.5" fill="none" opacity=".7"/>
+<circle cx="215" cy="215" r="16" fill="#8a5a1c" fill-opacity=".85"/><circle cx="228" cy="232" r="8" fill="#6b4310" fill-opacity=".8"/><circle cx="318" cy="268" r="13" fill="#8a5a1c" fill-opacity=".85"/>
+<rect x="188" y="188" width="62" height="62" rx="4" fill="none" stroke="#3dd6f5" stroke-width="2.5" stroke-dasharray="7 5"/>
+<rect x="188" y="168" width="88" height="20" rx="4" fill="#3dd6f5"/><text x="194" y="182" font-family="monospace" font-size="11" font-weight="700" fill="#0d0b18">spot 0.92</text>
+<rect x="296" y="246" width="46" height="46" rx="4" fill="none" stroke="#a895ff" stroke-width="2.5" stroke-dasharray="7 5"/>
+<rect x="296" y="226" width="80" height="20" rx="4" fill="#a895ff"/><text x="302" y="240" font-family="monospace" font-size="11" font-weight="700" fill="#0d0b18">spot 0.81</text>
+<rect x="80" y="150" width="380" height="3" fill="#3dd6f5" opacity=".7"/><rect x="80" y="135" width="380" height="18" fill="#3dd6f5" opacity=".08"/>
+<g filter="url(#sh)"><rect x="500" y="70" width="240" height="310" rx="18" fill="#15132a" stroke="#ffffff" stroke-opacity=".08"/></g>
+<text x="522" y="108" font-family="monospace" font-size="13" fill="#6f6a91">$ python detect.py</text>
+<rect x="522" y="126" width="160" height="8" rx="5" fill="#6f6a91"/><rect x="522" y="142" width="120" height="8" rx="5" fill="#6f6a91"/>
+<text x="522" y="190" font-family="sans-serif" font-size="14" font-weight="700" fill="#ededf3">Diagnosis</text>
+<text x="522" y="222" font-family="sans-serif" font-size="22" font-weight="700" fill="#3dd6f5">Leaf spot</text>
+<text x="522" y="262" font-family="monospace" font-size="12" fill="#6f6a91">Healthy</text><rect x="600" y="252" width="120" height="10" rx="5" fill="#1d1a38"/><rect x="600" y="252" width="9.6" height="10" rx="5" fill="#6f6a91"/><text x="522" y="298" font-family="monospace" font-size="12" fill="#6f6a91">Leaf spot</text><rect x="600" y="288" width="120" height="10" rx="5" fill="#1d1a38"/><rect x="600" y="288" width="104.4" height="10" rx="5" fill="#3dd6f5"/><text x="522" y="334" font-family="monospace" font-size="12" fill="#6f6a91">Other</text><rect x="600" y="324" width="120" height="10" rx="5" fill="#1d1a38"/><rect x="600" y="324" width="6" height="10" rx="5" fill="#a895ff"/>
+
+</svg>

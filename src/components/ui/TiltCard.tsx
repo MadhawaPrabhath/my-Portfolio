@@ -34,7 +34,7 @@ export default function TiltCard({ children, className = "" }: { children: React
   };
 
   return (
-    <div className="[perspective:1200px]">
+    <div className="h-full [perspective:1200px]">
       <motion.div
         ref={ref}
         onPointerMove={onMove}

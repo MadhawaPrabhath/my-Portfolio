@@ -9,7 +9,7 @@ import { GradCapIcon } from "@/components/ui/Icons";
 /** Education — degree card with animated coursework chips. */
 export default function Education() {
   return (
-    <section id="education" aria-labelledby="education-title" className="relative scroll-mt-24 py-28 md:py-40">
+    <section id="education" aria-labelledby="education-title" className="relative scroll-mt-24 py-16 md:py-20">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading index="05" eyebrow="Education" id="education-title" />
 
