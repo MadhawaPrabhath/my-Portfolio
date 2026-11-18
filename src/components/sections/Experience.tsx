@@ -1,98 +1,70 @@
 "use client";
 
-import { useRef } from "react";
-import { motion } from "framer-motion";
-import { experience, isPlaceholder, type Experience as Job } from "@/data/portfolio";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, animate, motion, useInView, useMotionValue, useTransform } from "framer-motion";
+import { experience, experienceStat, isPlaceholder } from "@/data/portfolio";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { scrollToY } from "@/lib/scroll";
 import { useReducedMotion } from "@/hooks/useMediaQuery";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const isCurrent = (period: string) => /present/i.test(period);
 
-/** Splits "Jan 2026 — Jul 2026" / "2024 — Present" into a big start label + the rest. */
-function splitPeriod(period: string) {
-  const [start, end] = period.split(/\s*[—–-]\s*/);
-  return { start: start ?? period, end: end ?? "" };
-}
-
-/** Small check icon used as a bullet. */
-const Check = () => (
-  <svg viewBox="0 0 16 16" className="size-3" aria-hidden="true">
-    <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-/** Role card with a soft spotlight that follows the cursor. */
-function RoleCard({ job }: { job: Job }) {
+/** Eye-catching stat card: spinning gradient border, glow, and a count-up number. */
+function StatCard({ reduced }: { reduced: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const onMove = (e: React.PointerEvent) => {
-    const el = ref.current;
-    if (!el || e.pointerType !== "mouse") return;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    el.style.setProperty("--my", `${e.clientY - r.top}px`);
-  };
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const [, num = "", suffix = ""] = experienceStat.value.match(/^(\d+)(.*)$/) ?? [];
+  const target = Number(num);
+  const count = useMotionValue(0);
+  const shown = useTransform(count, (v) => Math.round(v));
+
+  useEffect(() => {
+    if (!inView || !num) return;
+    if (reduced) return count.set(target);
+    const controls = animate(count, target, { duration: 1.4, ease, delay: 0.2 });
+    return () => controls.stop();
+  }, [inView, reduced, num, target, count]);
 
   return (
-    <div
-      ref={ref}
-      onPointerMove={onMove}
-      className="group relative overflow-hidden rounded-3xl border border-line bg-surface/50 p-6 transition-colors duration-500 hover:border-accent/40 md:p-8"
-    >
-      {/* Cursor spotlight */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--glow), transparent 60%)" }}
-      />
+    <div ref={ref} className="relative mt-6 md:mt-10">
+      {/* Soft glow behind the card */}
+      <div aria-hidden="true" className="absolute -inset-3 rounded-3xl bg-accent/25 blur-2xl" />
 
-      <div className="relative">
-        <h3 className="font-display text-2xl font-bold tracking-tight md:text-3xl">{job.role}</h3>
-        <p className="mt-4 leading-relaxed text-muted">{job.summary}</p>
+      {/* 1px gradient border that slowly spins */}
+      <div className="relative overflow-hidden rounded-2xl p-px">
+        <motion.span
+          aria-hidden="true"
+          className="absolute inset-[-60%] bg-[conic-gradient(from_0deg,transparent_0deg,var(--accent)_80deg,var(--accent-2)_160deg,transparent_240deg)]"
+          animate={reduced ? undefined : { rotate: 360 }}
+          transition={{ duration: 5, ease: "linear", repeat: Infinity }}
+        />
 
-        <ul className="mt-6 space-y-3">
-          {job.highlights.map((h, i) => (
-            <motion.li
-              key={h}
-              initial={{ opacity: 0, x: -16 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: 0.15 + i * 0.08, ease }}
-              className="flex gap-3 text-[15px] leading-relaxed text-fg/90"
-            >
-              <span className="mt-[3px] grid size-5 shrink-0 place-items-center rounded-full bg-accent/15 text-accent-soft ring-1 ring-accent/30">
-                <Check />
-              </span>
-              {h}
-            </motion.li>
-          ))}
-        </ul>
-
-        <ul className="mt-7 flex flex-wrap gap-2 border-t border-line pt-6" aria-label={`${job.role} tech stack`}>
-          {job.stack.map((t) => (
-            <li
-              key={t}
-              className="rounded-full border border-line bg-bg/40 px-3 py-1 font-mono text-[11px] text-muted transition-colors duration-300 hover:border-accent/60 hover:text-accent-soft"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
+        <div className="relative rounded-[15px] bg-bg/95 px-5 py-5">
+          <p className="flex items-start font-display font-bold leading-none">
+            <span className="text-gradient text-6xl md:text-7xl">{num ? <motion.span>{shown}</motion.span> : experienceStat.value}</span>
+            <span className="ml-1 text-4xl text-(--accent-2) md:text-5xl">{suffix}</span>
+          </p>
+          <p className="mt-3 text-sm font-medium uppercase leading-snug tracking-wider text-fg">{experienceStat.label}</p>
+        </div>
       </div>
     </div>
   );
 }
 
 /**
- * Experience — timeline list:
- *   giant outlined "MY EXPERIENCE" heading,
- *   each role = [ dates · company ]  ●  [ role card ]
- *   A rail fills with colour as you scroll; the current role's node pulses.
+ * Experience — simple tabs:
+ *   role list on the left (horizontal on mobile) + the selected role's details on the right.
  */
 export default function Experience() {
   const section = useRef<HTMLElement>(null);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const reduced = useReducedMotion();
+  const pin = useRef<ScrollTrigger | null>(null);
+  const [active, setActive] = useState(0);
+  const job = experience[active];
+  const last = experience.length - 1;
 
   useGSAP(
     () => {
@@ -103,20 +75,45 @@ export default function Experience() {
         { xPercent: 6 },
         { xPercent: -6, ease: "none", scrollTrigger: { trigger: section.current, start: "top bottom", end: "bottom top", scrub: true } },
       );
-      // Timeline rail fills as the list scrolls through the viewport.
-      gsap.fromTo(
-        "[data-rail-fill]",
-        { scaleY: 0 },
-        { scaleY: 1, ease: "none", scrollTrigger: { trigger: "[data-rail]", start: "top 70%", end: "bottom 60%", scrub: true } },
-      );
+
+      // Desktop: pin the whole section (heading + roles) and switch the active role as you scroll.
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px) and (min-height: 700px)", () => {
+        if (last < 1) return;
+        pin.current = ScrollTrigger.create({
+          trigger: section.current,
+          start: "top top",
+          end: () => `+=${last * window.innerHeight * 0.6}`,
+          pin: true,
+          onUpdate: (self) => setActive(Math.round(self.progress * last)),
+        });
+        return () => {
+          pin.current = null;
+        };
+      });
     },
-    { scope: section, dependencies: [reduced] },
+    { scope: section, dependencies: [reduced, last] },
   );
 
-  return (
-    <section ref={section} id="experience" aria-labelledby="experience-title" className="relative scroll-mt-24 overflow-x-clip py-16 md:py-20">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-1/2 size-[32rem] rounded-full bg-accent/10 blur-[150px]" />
+  /** Select a role — when pinned, scroll to that role's position so scroll and tabs stay in sync. */
+  const select = (i: number) => {
+    setActive(i);
+    const st = pin.current;
+    if (st) scrollToY(st.start + (i / last) * (st.end - st.start));
+  };
 
+  /** Arrow-key navigation between tabs. */
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const keys: Record<string, number> = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+    if (!(e.key in keys)) return;
+    e.preventDefault();
+    const next = (active + keys[e.key] + experience.length) % experience.length;
+    select(next);
+    tabs.current[next]?.focus();
+  };
+
+  return (
+    <section ref={section} id="experience" aria-labelledby="experience-title" className="relative overflow-x-clip pb-12 pt-24 md:pb-16">
       <div className="relative mx-auto max-w-6xl px-6">
         <SectionHeading index="05" eyebrow="Experience" id="experience-title" className="mb-6" />
       </div>
@@ -130,67 +127,78 @@ export default function Experience() {
         My Experience
       </div>
 
-      <div className="relative mx-auto mt-14 max-w-6xl px-6 md:mt-20">
-        <ol data-rail className="relative">
-          {/* Rail (sits between the meta column and the cards on desktop, at the left edge on mobile) */}
-          <span aria-hidden="true" className="absolute bottom-0 left-[7px] top-2 w-px bg-line md:left-[calc(13rem+1.5rem+7px)]" />
-          <span
-            data-rail-fill
-            aria-hidden="true"
-            className="absolute bottom-0 left-[7px] top-2 w-px origin-top bg-linear-to-b from-accent via-accent-soft to-[var(--accent-2)] md:left-[calc(13rem+1.5rem+7px)]"
-          />
+      <div className="relative mx-auto mt-10 grid max-w-5xl gap-8 px-6 md:mt-12 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12">
+        <div className="min-w-0 md:self-start">
+          {/* Role list */}
+          <div
+            role="tablist"
+            aria-label="Roles"
+            onKeyDown={onKeyDown}
+            className="flex overflow-x-auto border-b border-line [scrollbar-width:none] md:flex-col md:border-b-0 md:border-l"
+          >
+            {experience.map((j, i) => {
+              const selected = i === active;
+              return (
+                <button
+                  key={`${j.company}-${j.period}`}
+                  ref={(el) => {
+                    tabs.current[i] = el;
+                  }}
+                  id={`exp-tab-${i}`}
+                  role="tab"
+                  aria-selected={selected}
+                  aria-controls="exp-panel"
+                  tabIndex={selected ? 0 : -1}
+                  onClick={() => select(i)}
+                  className={`relative -mb-px shrink-0 border-b-2 px-4 py-3 text-left text-sm transition-colors duration-300 md:-ml-px md:mb-0 md:border-b-0 md:border-l-2 md:px-5 ${
+                    selected ? "border-accent bg-accent/5 text-accent-soft" : "border-transparent text-muted hover:bg-surface/40 hover:text-fg"
+                  }`}
+                >
+                  {j.company}
+                </button>
+              );
+            })}
+          </div>
+  
+          {/* Years-of-experience stat */}
+          <StatCard reduced={reduced} />
+        </div>
 
-          {experience.map((job) => {
-            const current = isCurrent(job.period);
-            const placeholder = isPlaceholder(job.company);
-            const { start, end } = splitPeriod(job.period);
+        {/* Selected role */}
+        <div id="exp-panel" role="tabpanel" aria-labelledby={`exp-tab-${active}`} className="min-h-96 min-w-0">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: reduced ? 0 : 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: reduced ? 0 : -8 }}
+              transition={{ duration: 0.3, ease }}
+            >
+              <h3 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+                {job.role}{" "}
+                <span className={isPlaceholder(job.company) ? "italic text-muted/70" : "text-accent-soft"}>@ {job.company}</span>
+              </h3>
 
-            return (
-              <motion.li
-                key={`${job.company}-${job.period}`}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.8, ease }}
-                className="relative grid gap-5 pb-12 pl-9 last:pb-0 md:grid-cols-[13rem_1rem_minmax(0,1fr)] md:gap-6 md:pb-16 md:pl-0"
-              >
-                {/* Meta: dates + company */}
-                <div className="md:pt-6 md:text-right">
-                  <p className="text-gradient font-display text-3xl font-bold leading-none md:text-4xl">{start}</p>
-                  <p className="mt-2 font-mono text-xs uppercase tracking-widest text-muted">→ {end}</p>
+              <p className="mt-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted">
+                {job.period}
+                {isCurrent(job.period) && <span className="size-1.5 rounded-full bg-emerald-400" aria-label="Current role" />}
+              </p>
 
-                  <div className="mt-5 flex items-center gap-3 md:justify-end">
-                    <span className={`text-sm leading-snug ${placeholder ? "italic text-muted/70" : "text-fg"}`}>{job.company}</span>
-                  </div>
+              <p className="mt-6 leading-relaxed text-muted">{job.summary}</p>
 
-                  {current && (
-                    <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs text-emerald-400">
-                      <span className="relative flex size-1.5">
-                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-70" />
-                        <span className="relative inline-flex size-1.5 rounded-full bg-emerald-400" />
-                      </span>
-                      Current
-                    </span>
-                  )}
-                </div>
+              <ul className="mt-6 space-y-3">
+                {job.highlights.map((h) => (
+                  <li key={h} className="flex gap-3 text-[15px] leading-relaxed text-fg/90">
+                    <span aria-hidden="true" className="mt-0.5 text-accent-soft">▹</span>
+                    {h}
+                  </li>
+                ))}
+              </ul>
 
-                {/* Node on the rail */}
-                <span aria-hidden="true" className="absolute left-0 top-2 md:relative md:left-auto md:top-0 md:mt-7 md:justify-self-center">
-                  <span
-                    className={`relative block size-[15px] rounded-full border-2 bg-bg ${
-                      current ? "border-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.6)]" : "border-accent shadow-[0_0_18px_var(--glow)]"
-                    }`}
-                  >
-                    {current && <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400/50" />}
-                  </span>
-                </span>
-
-                {/* Card */}
-                <RoleCard job={job} />
-              </motion.li>
-            );
-          })}
-        </ol>
+              <p className="mt-8 font-mono text-xs text-muted">{job.stack.join(" · ")}</p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );

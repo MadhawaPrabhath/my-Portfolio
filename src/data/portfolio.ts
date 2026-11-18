@@ -209,10 +209,13 @@ export const skillGroups: SkillGroup[] = [
   },
 ];
 
+/** Experience section — stat shown under the role list. */
+export const experienceStat = { value: "2+", label: "years of Full-Stack development experience" };
+
 export const experience: Experience[] = [
   {
     role: "Full-Stack Developer",
-    company: "Freelance",
+    company: "Freelancing / Personal Projects",
     period: "2024 — Present",
     summary:
       "Building full-stack web applications end to end since my third year of university — from responsive React/Next.js frontends to Node.js/Express APIs and SQL/NoSQL databases.",

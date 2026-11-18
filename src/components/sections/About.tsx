@@ -14,7 +14,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const stats = [
   { value: 6, suffix: "+", label: "Projects" },
   { value: 30, suffix: "+", label: "Technologies & tools" },
-  { value: 2, suffix: "+", label: "Years web development experience" },
+  { value: 2, suffix: "+", label: "Years of Full-Stack development experience" },
   { value: 2, suffix: "", label: "Majors — CS & Statistics" },
 ];
 
