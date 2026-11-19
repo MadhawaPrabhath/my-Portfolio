@@ -24,9 +24,9 @@ const M_HIDDEN = "inset(100% 0% 0% 47%)";
 const M_SHOWN = "inset(0% 0% 0% 47%)";
 
 /**
- * Intro loading screen: the "-m" logo draws itself (dash wipes in, "m" rises),
- * the dash then blinks like a terminal cursor while a progress line fills,
- * and finally the logo zooms out and the curtain fades to reveal the site.
+ * Intro loading screen: the "-m" logo slides in from the left while drawing itself
+ * (dash wipes in, "m" rises), loads in the middle (dash blinks like a terminal cursor,
+ * progress line fills), then slides out to the right and the curtain fades to reveal the site.
  * Closes once the page has loaded and MIN_MS has passed (MAX_MS at most).
  * Reduced-motion users see the static logo briefly.
  */
@@ -90,7 +90,7 @@ export default function Loader() {
           {/* Soft glow behind the logo (gently breathing) */}
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute size-96 rounded-full bg-accent/20 blur-[110px]"
+            className="pointer-events-none absolute size-40 rounded-full bg-accent/20 blur-[60px]"
             initial={{ opacity: 0, scale: 0.6 }}
             animate={reduced ? { opacity: 1, scale: 1 } : { opacity: [0, 1, 0.6, 1], scale: [0.6, 1, 0.9, 1] }}
             transition={reduced ? { duration: 0 } : { duration: 2.4, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
@@ -98,11 +98,19 @@ export default function Loader() {
 
           {reduced !== null && (
             <motion.div
-              className="relative flex flex-col items-center gap-8"
-              exit={{ opacity: 0, scale: 1.25, filter: "blur(12px)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } }}
+              className="relative flex flex-col items-center gap-4"
+              // Slides in from the left, loads in the middle, then slides out to the right.
+              initial={reduced ? { opacity: 1 } : { x: "-50vw", opacity: 0, filter: "blur(6px)" }}
+              animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, ease: EASE }}
+              exit={
+                reduced
+                  ? { opacity: 0, transition: { duration: 0.3 } }
+                  : { x: "50vw", opacity: 0, filter: "blur(6px)", transition: { duration: 0.6, ease: [0.55, 0, 0.75, 0] } }
+              }
             >
               {/* Logo: two clipped copies of the same image */}
-              <div aria-hidden="true" className="relative aspect-[4000/2082] w-36 sm:w-44">
+              <div aria-hidden="true" className="relative aspect-4000/2082 w-14 sm:w-16">
                 {/* "m" rises from the bottom */}
                 <motion.img
                   src={LOGO}
@@ -131,7 +139,7 @@ export default function Loader() {
               </div>
 
               {/* Progress line */}
-              <div aria-hidden="true" className="h-0.5 w-28 overflow-hidden rounded-full bg-fg/10 sm:w-36">
+              <div aria-hidden="true" className="h-0.5 w-12 overflow-hidden rounded-full bg-fg/10 sm:w-14">
                 <motion.div
                   className="h-full origin-left rounded-full bg-accent"
                   initial={{ scaleX: reduced ? 1 : 0 }}
