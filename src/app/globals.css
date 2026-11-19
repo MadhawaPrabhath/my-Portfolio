@@ -106,16 +106,6 @@ html.lenis body {
   color: transparent;
 }
 
-/* Theme-specific logo (both <img>s are in the DOM; only one is shown) */
-.logo-for-light {
-  display: none;
-}
-:root[data-theme="light"] .logo-for-light {
-  display: block;
-}
-:root[data-theme="light"] .logo-for-dark {
-  display: none;
-}
 
 .glass {
   background: color-mix(in oklab, var(--surface) 70%, transparent);
