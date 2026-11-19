@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 
 type Props = {
-  index: string;
+  /** Section number — no longer displayed (kept so existing call sites still compile). */
+  index?: string;
   eyebrow: string;
   /** id of the heading element (used by aria-labelledby on the section) */
   id: string;
@@ -13,10 +14,10 @@ type Props = {
 };
 
 /**
- * Section label: "01 —— About" (+ optional description).
+ * Section label: "—— About" (+ optional description).
  * The label itself is the section's <h2>, so the page keeps a proper heading outline.
  */
-export default function SectionHeading({ index, eyebrow, id, description, className = "mb-14 md:mb-20" }: Props) {
+export default function SectionHeading({ eyebrow, id, description, className = "mb-14 md:mb-20" }: Props) {
   return (
     <div className={className}>
       <motion.h2
@@ -27,7 +28,6 @@ export default function SectionHeading({ index, eyebrow, id, description, classN
         transition={{ duration: 0.6 }}
         className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-accent-soft"
       >
-        <span aria-hidden="true">{index}</span>
         <span className="h-px w-10 bg-accent" aria-hidden="true" />
         <span>{eyebrow}</span>
       </motion.h2>
